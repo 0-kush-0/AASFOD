@@ -241,7 +241,7 @@ __C.MOBILENET.WEIGHT_DECAY = 0.00004
 __C.MOBILENET.DEPTH_MULTIPLIER = 1.
 ## Model path. Change the path based on your environment.
 # download vgg16_caffe.pth to your own path
-__C.VGG_PATH = "your_own_pth_path/vgg16_caffe.pth"
+__C.VGG_PATH = "/kaggle/input/vggcaffe/vgg16_caffe.pth"
 __C.RESNET_PATH = "your_own_pth_path/resnet101_caffe.pth"
 
 #

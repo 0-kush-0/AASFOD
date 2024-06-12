@@ -23,8 +23,8 @@ cfg_d = __D
 # You have to prepare your dataset in VOC format
 # Define your own data path
 
-__D.CITYSCAPE = ".../cityscape_s/"
-__D.FOGGYCITY = ".../cityscape_t/"
+__D.CITYSCAPE = "/kaggle/input/coco-1k/coco_1k/"
+__D.FOGGYCITY = "/kaggle/input/test-1k/voc_test/"
 # Split the dataset into two parts using select_by_uncertainty.py
 __D.FOGGYCITY_similar = ".../cityscape_t_similar/"
 __D.FOGGYCITY_disimilar = ".../cityscape_t_disimilar/"
