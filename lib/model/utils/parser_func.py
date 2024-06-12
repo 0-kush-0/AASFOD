@@ -413,7 +413,7 @@ def set_dataset_args(args, test=False):
             args.imdb_name_target = "bdd100k_disimilar_train"
             args.set_cfgs_target = ['ANCHOR_SCALES', '[8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]', 'MAX_NUM_GT_BOXES', '30']
 
-    args.cfg_file = "your_own_path/Code_for_share/cfgs/{}_ls.yml".format(args.net) if args.large_scale else "your_own_path/Code_for_share/cfgs/{}.yml".format(args.net)
+    args.cfg_file = "your_own_path/Code_for_share/cfgs/{}_ls.yml".format(args.net) if args.large_scale else "/kaggle/working/AASFOD/cfgs/{}.yml".format(args.net)
 
 
     return args
