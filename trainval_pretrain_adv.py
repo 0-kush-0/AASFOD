@@ -10,11 +10,14 @@ import pprint
 import pdb
 import time
 import _init_paths
+import sys
 
 import torch
 from torch.autograd import Variable
 import torch.nn as nn
 import torch.nn.functional as F
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
 
 from roi_data_layer.roidb import combined_roidb
 from roi_data_layer.roibatchLoader import roibatchLoader
