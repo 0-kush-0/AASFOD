@@ -176,41 +176,41 @@ if __name__ == '__main__':
         if type(m) == nn.Dropout:
             m.train()
     fasterRCNN.apply(apply_dropout)
-    # for step in range(len(dataloader_t)):
+    for step in range(len(dataloader_t)):
 
-    data_t = next(data_iter_t)
+        data_t = next(data_iter_t)
 
-    weak_aug_data = data_t[0][:, 0, :, :, :]
-    im_data_w.resize_(weak_aug_data.size()).copy_(weak_aug_data)
-    im_info.resize_(data_t[1].size()).copy_(data_t[1])
-    gt_boxes.resize_(1, 1, 5).zero_()
-    num_boxes.resize_(1).zero_()
-    img_path = data_t[-2][0]
+        weak_aug_data = data_t[0][:, 0, :, :, :]
+        im_data_w.resize_(weak_aug_data.size()).copy_(weak_aug_data)
+        im_info.resize_(data_t[1].size()).copy_(data_t[1])
+        gt_boxes.resize_(1, 1, 5).zero_()
+        num_boxes.resize_(1).zero_()
+        img_path = data_t[-2][0]
 
 
-    T = 20
-    for t in range(T):
-        # print(t)
-        fasterRCNN.zero_grad()
-        rois, cls_prob, bbox_pred, \
-        rpn_loss_cls, rpn_loss_box, \
-        RCNN_loss_cls, RCNN_loss_bbox, \
-        rois_label, out_d_pixel, out_d = fasterRCNN(im_data_w, im_info, gt_boxes, num_boxes)
+        T = 6
+        for t in range(T):
+            # print(t)
+            fasterRCNN.zero_grad()
+            rois, cls_prob, bbox_pred, \
+            rpn_loss_cls, rpn_loss_box, \
+            RCNN_loss_cls, RCNN_loss_bbox, \
+            rois_label, out_d_pixel, out_d = fasterRCNN(im_data_w, im_info, gt_boxes, num_boxes)
 
-        if t == 0:
-            g = cls_prob
-            l = bbox_pred
-        g = torch.cat((g, cls_prob), dim=0)
-        l = torch.cat((l, bbox_pred), dim=0)
+            if t == 0:
+                g = cls_prob
+                l = bbox_pred
+            g = torch.cat((g, cls_prob), dim=0)
+            l = torch.cat((l, bbox_pred), dim=0)
 
-    g_mean = torch.mean(g, dim=0)
-    uc = torch.mean(torch.sum(g ** 2, dim=2), dim=0) - torch.sum(g_mean ** 2, dim=1)
-    l_mean = torch.mean(l, dim=0)
-    ul = torch.mean(torch.sum(l ** 2, dim=2), dim=0) - torch.sum(l_mean ** 2, dim=1)
-    u = uc * ul
-    image_uncertainty = torch.sum(u)
-    A_score_list.append(image_uncertainty.detach().cpu().numpy())
-    img_paths.append(img_path)
+        g_mean = torch.mean(g, dim=0)
+        uc = torch.mean(torch.sum(g ** 2, dim=2), dim=0) - torch.sum(g_mean ** 2, dim=1)
+        l_mean = torch.mean(l, dim=0)
+        ul = torch.mean(torch.sum(l ** 2, dim=2), dim=0) - torch.sum(l_mean ** 2, dim=1)
+        u = uc * ul
+        image_uncertainty = torch.sum(u)
+        A_score_list.append(image_uncertainty.detach().cpu().numpy())
+        img_paths.append(img_path)
 
 
     A_score_list = np.array(A_score_list)
