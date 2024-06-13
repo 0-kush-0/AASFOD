@@ -18,6 +18,7 @@ import torch.nn.functional as F
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
 
+torch.backends.cudnn.enabled = False
 
 from roi_data_layer.roidb import combined_roidb
 from roi_data_layer.roibatchLoader import roibatchLoader
