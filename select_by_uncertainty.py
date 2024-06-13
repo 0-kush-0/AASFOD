@@ -32,8 +32,8 @@ from model.rpn.bbox_transform import bbox_transform_inv
 from model.rpn.bbox_transform import clip_boxes
 #from model.nms.nms_wrapper import nms
 from model.roi_layers import nms
-from model.utils.loss import Entropy, score_function
-from model.utils.obtain_predictions import obtain_predictions
+# from model.utils.loss import Entropy, score_function
+# from model.utils.obtain_predictions import obtain_predictions
 
 from PIL import Image
 import matplotlib.pyplot as plt
