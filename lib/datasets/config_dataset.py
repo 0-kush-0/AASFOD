@@ -26,8 +26,8 @@ cfg_d = __D
 __D.CITYSCAPE = "/kaggle/input/coco-1k/coco_1k/"
 __D.FOGGYCITY = "/kaggle/input/test-1k/voc_test/"
 # Split the dataset into two parts using select_by_uncertainty.py
-__D.FOGGYCITY_similar = ".../similar/voc_test/"
-__D.FOGGYCITY_disimilar = ".../disimilar/voc_test/"
+__D.FOGGYCITY_similar = "/kaggle/input/similar/voc_test/"
+__D.FOGGYCITY_disimilar = "/kaggle/input/disimilar/voc_test/"
 
 
 # We only use part of bdd100k daytime with 36547 images
