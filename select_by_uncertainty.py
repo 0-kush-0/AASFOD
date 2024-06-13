@@ -18,7 +18,6 @@ import torch
 from torch.autograd import Variable
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.nn.parallel.scatter_gather import gather
 
 from roi_data_layer.roidb import combined_roidb
 from roi_data_layer.roibatchLoader import roibatchLoader
@@ -53,7 +52,7 @@ if __name__ == '__main__':
     print('Using config:')
     pprint.pprint(cfg)
     np.random.seed(cfg.RNG_SEED)
-
+    args.cuda = False
     # torch.backends.cudnn.benchmark = True
     if torch.cuda.is_available() and not args.cuda:
         print("WARNING: You have a CUDA device, so you should probably run with --cuda")
@@ -151,29 +150,8 @@ if __name__ == '__main__':
 
 
     if args.mGPUs:
-        def custom_gather(outputs, target_device):
-            outputs = list(outputs)
-            out_rois = gather([output[0] for output in outputs], target_device)
-            out_cls_prob = gather([output[1] for output in outputs], target_device)
-            out_bbox_pred = gather([output[2] for output in outputs], target_device)
-            out_rpn_loss_cls = gather([output[3] for output in outputs], target_device)
-            out_rpn_loss_box = gather([output[4] for output in outputs], target_device)
-            out_RCNN_loss_cls = gather([output[5] for output in outputs], target_device)
-            out_RCNN_loss_bbox = gather([output[6] for output in outputs], target_device)
-            out_rois_label = gather([output[7] for output in outputs], target_device)
-            out_out_d_pixel = gather([output[8] for output in outputs], target_device)
-            out_out_d = gather([output[9] for output in outputs], target_device)
-            return out_rois, out_cls_prob, out_bbox_pred, out_rpn_loss_cls, out_rpn_loss_box, \
-                out_RCNN_loss_cls, out_RCNN_loss_bbox, out_rois_label, out_out_d_pixel, out_out_d
-
-        class CustomDataParallel(torch.nn.DataParallel):
-            def gather(self, outputs, output_device):
-                return custom_gather(outputs, output_device)
-
-        fasterRCNN = CustomDataParallel(fasterRCNN)
-
-
-        # fasterRCNN = nn.DataParallel(fasterRCNN)
+        
+        fasterRCNN = nn.DataParallel(fasterRCNN)
 
 
     iters_per_epoch = int(10000 / args.batch_size)
