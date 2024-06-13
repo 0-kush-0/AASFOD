@@ -120,7 +120,7 @@ if __name__ == '__main__':
     fasterRCNN.create_architecture()
 
     print("load pretrain checkpoint %s" % (args.load_name)) #--load_name
-    checkpoint = torch.load(args.load_name)
+    checkpoint = torch.load(args.load_name, map_location=torch.device('cpu'))
     fasterRCNN.load_state_dict(checkpoint['model'])
     if 'pooling_mode' in checkpoint.keys():
         cfg.POOLING_MODE = checkpoint['pooling_mode']
