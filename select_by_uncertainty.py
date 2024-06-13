@@ -52,7 +52,7 @@ if __name__ == '__main__':
     print('Using config:')
     pprint.pprint(cfg)
     np.random.seed(cfg.RNG_SEED)
-    args.cuda = False
+    # args.cuda = False
     # torch.backends.cudnn.benchmark = True
     if torch.cuda.is_available() and not args.cuda:
         print("WARNING: You have a CUDA device, so you should probably run with --cuda")
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     fasterRCNN.create_architecture()
 
     print("load pretrain checkpoint %s" % (args.load_name)) #--load_name
-    checkpoint = torch.load(args.load_name, map_location=torch.device('cpu'))
+    checkpoint = torch.load(args.load_name)
     fasterRCNN.load_state_dict(checkpoint['model'])
     if 'pooling_mode' in checkpoint.keys():
         cfg.POOLING_MODE = checkpoint['pooling_mode']
@@ -225,14 +225,14 @@ if __name__ == '__main__':
 
 
     # write your own path of train.txt of source_similar data
-    similar_txt_path = "/kaggle/input/cityscapes-t-similar/voc_test/ImageSets/Main/train.txt"
+    similar_txt_path = "/kaggle/input/test-similar/voc_test"
     with open(similar_txt_path, "w+") as f_similar:
         for path in img_paths_similar:
             image_index = path[38:-4].strip() + '\n'
             f_similar.write(image_index)
 
     # write your own path of train.txt of source_dissimilar data
-    disimilar_txt_path = "/kaggle/input/cityscapes-t-dissimilar/voc_test/ImageSets/Main/train.txt"
+    disimilar_txt_path = "/kaggle/input/test-dissimilar/voc_test"
     with open(disimilar_txt_path, "w+") as f_disimilar:
         for path in img_paths_disimilar:
             image_index = path[38:-4].strip() + '\n'
