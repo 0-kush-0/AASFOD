@@ -190,6 +190,7 @@ if __name__ == '__main__':
 
         T = 20
         for t in range(T):
+            print(t)
             fasterRCNN.zero_grad()
             rois, cls_prob, bbox_pred, \
             rpn_loss_cls, rpn_loss_box, \
