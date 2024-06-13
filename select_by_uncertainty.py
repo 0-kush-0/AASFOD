@@ -10,6 +10,9 @@ import pprint
 import pdb
 import time
 import _init_paths
+import sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
 
 import torch
 from torch.autograd import Variable
