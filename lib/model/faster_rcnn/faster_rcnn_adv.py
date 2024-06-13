@@ -297,10 +297,18 @@ class _fasterRCNN(nn.Module):
         d_pixel = self.netD_pixel(grad_reverse(base_feat1, lambd=eta))
 
 
+        print(f"Input shape: {base_feat1.shape}")
+        print(f"GT boxes shape: {gt_boxes.shape}")
+
+        # Inside your model's forward method
         base_feat2 = self.RCNN_base2(base_feat1)
 
+        print(f"Base feature 2 shape: {base_feat2.shape}")
 
         base_feat = self.RCNN_base3(base_feat2)
+
+        print(f"Base feature shape: {base_feat.shape}")
+        
         domain_p = self.netD(grad_reverse(base_feat, lambd=eta))
 
         if target:
