@@ -51,8 +51,7 @@ if __name__ == '__main__':
     # cfg.MAX_NUM_GT_BOXES = 40
     pprint.pprint(cfg)
     np.random.seed(cfg.RNG_SEED)
-    ##########################################################################
-    args.cuda=False
+    
     # torch.backends.cudnn.benchmark = True
     if torch.cuda.is_available() and not args.cuda:
         print("WARNING: You have a CUDA device, so you should probably run with --cuda")
@@ -135,8 +134,8 @@ if __name__ == '__main__':
 
 
     print("load pretrain checkpoint %s" % (args.load_name))  # --load_name
-    ##########################################################################################
-    checkpoint = torch.load(args.load_name, map_location=torch.device('cpu'))
+    
+    checkpoint = torch.load(args.load_name)
     student_fasterRCNN.load_state_dict(checkpoint['model'])
     if 'pooling_mode' in checkpoint.keys():
         cfg.POOLING_MODE = checkpoint['pooling_mode']
@@ -278,10 +277,10 @@ if __name__ == '__main__':
                                 box_deltas.view(-1, 4)
                                 * torch.FloatTensor(
                             cfg.TRAIN.BBOX_NORMALIZE_STDS
-                        )
+                        ).cuda()
                                 + torch.FloatTensor(
                             cfg.TRAIN.BBOX_NORMALIZE_MEANS
-                        )
+                        ).cuda()
                         )
                         box_deltas = box_deltas.view(1, -1, 4)
                     else:
@@ -289,10 +288,10 @@ if __name__ == '__main__':
                                 box_deltas.view(-1, 4)
                                 * torch.FloatTensor(
                             cfg.TRAIN.BBOX_NORMALIZE_STDS
-                        )
+                        ).cuda()
                                 + torch.FloatTensor(
                             cfg.TRAIN.BBOX_NORMALIZE_MEANS
-                        )
+                        ).cuda()
                         )
                         box_deltas = box_deltas.view(1, -1, 4 * len(imdb_t.classes))
 
