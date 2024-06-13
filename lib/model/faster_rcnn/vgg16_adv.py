@@ -200,7 +200,7 @@ class vgg16(_fasterRCNN):
     feat_d3 = 2048
 
     self.RandomLayer = RandomLayer([feat_d, feat_d2], feat_d3)
-    self.RandomLayer.cuda()
+    # self.RandomLayer.cuda()
 
     self.netD_da = netD_da(feat_d3)
 
