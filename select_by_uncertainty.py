@@ -18,6 +18,7 @@ import torch
 from torch.autograd import Variable
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.nn.parallel.scatter_gather import gather
 
 from roi_data_layer.roidb import combined_roidb
 from roi_data_layer.roibatchLoader import roibatchLoader
@@ -150,7 +151,21 @@ if __name__ == '__main__':
 
 
     if args.mGPUs:
-        fasterRCNN = nn.DataParallel(fasterRCNN)
+        
+
+        def custom_gather(outputs, target_device):
+            out_rois_label = gather([output[0] for output in outputs], target_device)
+            out_out_d_pixel = gather([output[1] for output in outputs], target_device)
+            out_out_d = gather([output[2] for output in outputs], target_device)
+            return out_rois_label, out_out_d_pixel, out_out_d
+
+        class CustomDataParallel(torch.nn.DataParallel):
+            def gather(self, outputs, output_device):
+                return custom_gather(outputs, output_device)
+
+        fasterRCNN = CustomDataParallel(fasterRCNN)
+
+        # fasterRCNN = nn.DataParallel(fasterRCNN)
 
 
     iters_per_epoch = int(10000 / args.batch_size)
