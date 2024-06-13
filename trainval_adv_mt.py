@@ -278,10 +278,10 @@ if __name__ == '__main__':
                                 box_deltas.view(-1, 4)
                                 * torch.FloatTensor(
                             cfg.TRAIN.BBOX_NORMALIZE_STDS
-                        )'''.cuda()'''
+                        )
                                 + torch.FloatTensor(
                             cfg.TRAIN.BBOX_NORMALIZE_MEANS
-                        )'''.cuda()'''
+                        )
                         )
                         box_deltas = box_deltas.view(1, -1, 4)
                     else:
@@ -289,10 +289,10 @@ if __name__ == '__main__':
                                 box_deltas.view(-1, 4)
                                 * torch.FloatTensor(
                             cfg.TRAIN.BBOX_NORMALIZE_STDS
-                        )'''.cuda()'''
+                        )
                                 + torch.FloatTensor(
                             cfg.TRAIN.BBOX_NORMALIZE_MEANS
-                        )'''.cuda()'''
+                        )
                         )
                         box_deltas = box_deltas.view(1, -1, 4 * len(imdb_t.classes))
 
