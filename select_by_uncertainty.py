@@ -227,7 +227,7 @@ if __name__ == '__main__':
 
 
     # write your own path of train.txt of source_similar data
-    similar_txt_path = "/kaggle/input/test-similar/voc_test/ImageSets/Main/train.txt"
+    similar_txt_path = "/kaggle/input/test-similar/voc_test/voc_test/ImageSets/Main/train.txt"
     with open(similar_txt_path, "w+") as f_similar:
         for path in img_paths_similar:
             image_index = path[38:-4].strip() + '\n'
