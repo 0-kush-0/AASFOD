@@ -221,6 +221,7 @@ if __name__ == '__main__':
 
     pre_defined_threshold = 0.8  # please set your own pre_defined_threshold
     num_similar = (1 - pre_defined_threshold) * len(img_paths)
+    print(index, num_similar)
     img_paths_similar = img_paths[index][-num_similar:]
     img_paths_disimilar = img_paths[index][:-num_similar]
 
