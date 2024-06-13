@@ -155,7 +155,8 @@ class FocalLoss(nn.Module):
             
             class_mask = Variable(class_mask)
             ids = targets.view(-1, 1)
-            print(class_mask.device, ids.data.device)
+            ids = ids.to('cpu')
+            # print(class_mask.device, ids.data.device)
             class_mask.scatter_(1, ids.data, 1.)
             # print(class_mask)
 
