@@ -285,17 +285,18 @@ if __name__ == '__main__':
                 }, save_name)
                 print('save model: {}'.format(save_name))
 
-        save_name = os.path.join(output_dir,
-                                 'lg_adv_session_{}_epoch_{}_step_{}.pth'.format(args.session,epoch,step))
-        save_checkpoint({
-            'session': args.session,
-            'epoch': epoch + 1,
-            'model': fasterRCNN.module.state_dict() if args.mGPUs else fasterRCNN.state_dict(),
-            'optimizer': optimizer.state_dict(),
-            'pooling_mode': cfg.POOLING_MODE,
-            'class_agnostic': args.class_agnostic,
-        }, save_name)
-        print('save model: {}'.format(save_name))
+        if epoch%2==0:
+            save_name = os.path.join(output_dir,
+                                    'lg_adv_session_{}_epoch_{}_step_{}.pth'.format(args.session,epoch,step))
+            save_checkpoint({
+                'session': args.session,
+                'epoch': epoch + 1,
+                'model': fasterRCNN.module.state_dict() if args.mGPUs else fasterRCNN.state_dict(),
+                'optimizer': optimizer.state_dict(),
+                'pooling_mode': cfg.POOLING_MODE,
+                'class_agnostic': args.class_agnostic,
+            }, save_name)
+            print('save model: {}'.format(save_name))
 
     if args.use_tfboard:
         logger.close()
