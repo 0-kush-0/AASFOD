@@ -152,6 +152,7 @@ if __name__ == '__main__':
 
     if args.mGPUs:
         def custom_gather(outputs, target_device):
+            outputs = list(outputs)
             out_rois = gather([output[0] for output in outputs], target_device)
             out_cls_prob = gather([output[1] for output in outputs], target_device)
             out_bbox_pred = gather([output[2] for output in outputs], target_device)
