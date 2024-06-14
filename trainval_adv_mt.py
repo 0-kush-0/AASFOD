@@ -237,237 +237,237 @@ if __name__ == '__main__':
         data_iter_s = iter(dataloader_s)
         data_iter_t = iter(dataloader_t)
 
-        # for step in range(1, iters_per_epoch + 1):
-        #     try:
-        #         data_s = next(data_iter_s)
-        #     except:
-        #         data_iter_s = iter(dataloader_s)
-        #         data_s = next(data_iter_s)
-        #     try:
-        #         data_t = next(data_iter_t)
-        #     except:
-        #         data_iter_t = iter(dataloader_t)
-        #         data_t = next(data_iter_t)
+        for step in range(1, iters_per_epoch + 1):
+            try:
+                data_s = next(data_iter_s)
+            except:
+                data_iter_s = iter(dataloader_s)
+                data_s = next(data_iter_s)
+            try:
+                data_t = next(data_iter_t)
+            except:
+                data_iter_t = iter(dataloader_t)
+                data_t = next(data_iter_t)
 
-        #     data_ss = data_s[0][:, 1, :, :, :]  # similar数据增强
-        #     data_sw = data_s[0][:, 0, :, :, :]  # similar不数据增强
-        #     im_data_s.resize_(data_ss.size()).copy_(data_ss)  # (1,3,600,1200)
-        #     im_data_w.resize_(data_sw.size()).copy_(data_sw)
-        #     im_info.resize_(data_s[1].size()).copy_(data_s[1])
-        #     gt_boxes.resize_(1, 1, 5).zero_()
-        #     num_boxes.resize_(1).zero_()
-
-
-        #     teacher_fasterRCNN.zero_grad()
-        #     rois, cls_prob, bbox_pred, \
-        #     rpn_loss_cls, rpn_loss_box, \
-        #     RCNN_loss_cls, RCNN_loss_bbox, \
-        #     rois_label, out_d_pixel, out_d = teacher_fasterRCNN(im_data_w, im_info, gt_boxes, num_boxes)
-
-        #     scores = cls_prob.data
-        #     boxes = rois.data[:, :, 1:5]
-
-        #     if cfg.TEST.BBOX_REG:
-        #         # Apply bounding-box regression deltas
-        #         box_deltas = bbox_pred.data
-        #         if cfg.TRAIN.BBOX_NORMALIZE_TARGETS_PRECOMPUTED:
-        #             # Optionally normalize targets by a precomputed mean and stdev
-        #             if args.class_agnostic:
-        #                 box_deltas = (
-        #                         box_deltas.view(-1, 4)
-        #                         * torch.FloatTensor(
-        #                     cfg.TRAIN.BBOX_NORMALIZE_STDS
-        #                 ).cuda()
-        #                         + torch.FloatTensor(
-        #                     cfg.TRAIN.BBOX_NORMALIZE_MEANS
-        #                 ).cuda()
-        #                 )
-        #                 box_deltas = box_deltas.view(1, -1, 4)
-        #             else:
-        #                 box_deltas = (
-        #                         box_deltas.view(-1, 4)
-        #                         * torch.FloatTensor(
-        #                     cfg.TRAIN.BBOX_NORMALIZE_STDS
-        #                 ).cuda()
-        #                         + torch.FloatTensor(
-        #                     cfg.TRAIN.BBOX_NORMALIZE_MEANS
-        #                 ).cuda()
-        #                 )
-        #                 box_deltas = box_deltas.view(1, -1, 4 * len(imdb_t.classes))
-
-        #         pred_boxes = bbox_transform_inv(boxes, box_deltas, 1)
-        #         pred_boxes = clip_boxes(pred_boxes, im_info.data, 1)
-        #     else:
-        #         # Simply repeat the boxes, once for each class
-        #         pred_boxes = np.tile(boxes, (1, scores.shape[1]))
+            data_ss = data_s[0][:, 1, :, :, :]  # similar数据增强
+            data_sw = data_s[0][:, 0, :, :, :]  # similar不数据增强
+            im_data_s.resize_(data_ss.size()).copy_(data_ss)  # (1,3,600,1200)
+            im_data_w.resize_(data_sw.size()).copy_(data_sw)
+            im_info.resize_(data_s[1].size()).copy_(data_s[1])
+            gt_boxes.resize_(1, 1, 5).zero_()
+            num_boxes.resize_(1).zero_()
 
 
-        #     scores = scores.squeeze()
-        #     pred_boxes = pred_boxes.squeeze()
-        #     gt_boxes_target = []
-        #     pre_thresh = 0.0
-        #     thresh = args.threshold
-        #     empty_array = np.transpose(np.array([[], [], [], [], []]), (1, 0))
-        #     for j in range(1, len(imdb_t.classes)):
-        #         inds = torch.nonzero(scores[:, j] > pre_thresh).view(-1)
-        #         # if there is det
-        #         if inds.numel() > 0:
-        #             cls_scores = scores[:, j][inds]
-        #             _, order = torch.sort(cls_scores, 0, True)
-        #             if args.class_agnostic:
-        #                 cls_boxes = pred_boxes[inds, :]
-        #             else:
-        #                 cls_boxes = pred_boxes[inds][:, j * 4: (j + 1) * 4]
+            teacher_fasterRCNN.zero_grad()
+            rois, cls_prob, bbox_pred, \
+            rpn_loss_cls, rpn_loss_box, \
+            RCNN_loss_cls, RCNN_loss_bbox, \
+            rois_label, out_d_pixel, out_d = teacher_fasterRCNN(im_data_w, im_info, gt_boxes, num_boxes)
 
-        #             cls_dets = torch.cat((cls_boxes, cls_scores.unsqueeze(1)), 1)
-        #             cls_dets = cls_dets[order]
-        #             keep = nms(cls_boxes[order, :], cls_scores[order], cfg.TEST.NMS)
-        #             cls_dets = cls_dets[keep.view(-1).long()]
-        #             cls_dets_numpy = cls_dets.cpu().numpy()
-        #             for i in range(np.minimum(10, cls_dets_numpy.shape[0])):
-        #                 bbox = tuple(
-        #                     int(np.round(x)) for x in cls_dets_numpy[i, :4]
-        #                 )
-        #                 score = cls_dets_numpy[i, -1]
-        #                 if score > thresh:
-        #                     gt_boxes_target.append(list(bbox[0:4]) + [j])
+            scores = cls_prob.data
+            boxes = rois.data[:, :, 1:5]
 
-        #     gt_boxes_padding = torch.FloatTensor(cfg.MAX_NUM_GT_BOXES, 5).zero_()
-        #     if len(gt_boxes_target) != 0:
-        #         gt_boxes_numpy = torch.FloatTensor(gt_boxes_target)
-        #         num_boxes_cpu = torch.LongTensor(
-        #             [min(gt_boxes_numpy.size(0), cfg.MAX_NUM_GT_BOXES)]
-        #         )
-        #         gt_boxes_padding[:num_boxes_cpu, :] = gt_boxes_numpy[:num_boxes_cpu]
-        #     else:
-        #         num_boxes_cpu = torch.LongTensor([0])
+            if cfg.TEST.BBOX_REG:
+                # Apply bounding-box regression deltas
+                box_deltas = bbox_pred.data
+                if cfg.TRAIN.BBOX_NORMALIZE_TARGETS_PRECOMPUTED:
+                    # Optionally normalize targets by a precomputed mean and stdev
+                    if args.class_agnostic:
+                        box_deltas = (
+                                box_deltas.view(-1, 4)
+                                * torch.FloatTensor(
+                            cfg.TRAIN.BBOX_NORMALIZE_STDS
+                        ).cuda()
+                                + torch.FloatTensor(
+                            cfg.TRAIN.BBOX_NORMALIZE_MEANS
+                        ).cuda()
+                        )
+                        box_deltas = box_deltas.view(1, -1, 4)
+                    else:
+                        box_deltas = (
+                                box_deltas.view(-1, 4)
+                                * torch.FloatTensor(
+                            cfg.TRAIN.BBOX_NORMALIZE_STDS
+                        ).cuda()
+                                + torch.FloatTensor(
+                            cfg.TRAIN.BBOX_NORMALIZE_MEANS
+                        ).cuda()
+                        )
+                        box_deltas = box_deltas.view(1, -1, 4 * len(imdb_t.classes))
 
-        #     gt_boxes_padding = torch.unsqueeze(gt_boxes_padding, 0)
-        #     gt_boxes.resize_(gt_boxes_padding.size()).copy_(gt_boxes_padding)
-        #     num_boxes.resize_(num_boxes_cpu.size()).copy_(num_boxes_cpu)
-
-        #     student_fasterRCNN.zero_grad()
-        #     rois, cls_prob, bbox_pred, \
-        #     rpn_loss_cls, rpn_loss_box, \
-        #     RCNN_loss_cls, RCNN_loss_bbox, \
-        #     rois_label, out_d_pixel, out_d = student_fasterRCNN(im_data_s, im_info, gt_boxes, num_boxes)
-
-        #     loss = rpn_loss_cls.mean() + rpn_loss_box.mean() \
-        #            + RCNN_loss_cls.mean() + RCNN_loss_bbox.mean()
+                pred_boxes = bbox_transform_inv(boxes, box_deltas, 1)
+                pred_boxes = clip_boxes(pred_boxes, im_info.data, 1)
+            else:
+                # Simply repeat the boxes, once for each class
+                pred_boxes = np.tile(boxes, (1, scores.shape[1]))
 
 
-        #     count_step += 1
+            scores = scores.squeeze()
+            pred_boxes = pred_boxes.squeeze()
+            gt_boxes_target = []
+            pre_thresh = 0.0
+            thresh = args.threshold
+            empty_array = np.transpose(np.array([[], [], [], [], []]), (1, 0))
+            for j in range(1, len(imdb_t.classes)):
+                inds = torch.nonzero(scores[:, j] > pre_thresh).view(-1)
+                # if there is det
+                if inds.numel() > 0:
+                    cls_scores = scores[:, j][inds]
+                    _, order = torch.sort(cls_scores, 0, True)
+                    if args.class_agnostic:
+                        cls_boxes = pred_boxes[inds, :]
+                    else:
+                        cls_boxes = pred_boxes[inds][:, j * 4: (j + 1) * 4]
 
-        #     loss_temp += loss.item()
-        #     loss_rpn_cls_temp += rpn_loss_cls.mean().item()
-        #     loss_rpn_box_temp += rpn_loss_box.mean().item()
-        #     loss_rcnn_cls_temp += RCNN_loss_cls.mean().item()
-        #     loss_rcnn_box_temp += RCNN_loss_bbox.mean().item()
+                    cls_dets = torch.cat((cls_boxes, cls_scores.unsqueeze(1)), 1)
+                    cls_dets = cls_dets[order]
+                    keep = nms(cls_boxes[order, :], cls_scores[order], cfg.TEST.NMS)
+                    cls_dets = cls_dets[keep.view(-1).long()]
+                    cls_dets_numpy = cls_dets.cpu().numpy()
+                    for i in range(np.minimum(10, cls_dets_numpy.shape[0])):
+                        bbox = tuple(
+                            int(np.round(x)) for x in cls_dets_numpy[i, :4]
+                        )
+                        score = cls_dets_numpy[i, -1]
+                        if score > thresh:
+                            gt_boxes_target.append(list(bbox[0:4]) + [j])
 
+            gt_boxes_padding = torch.FloatTensor(cfg.MAX_NUM_GT_BOXES, 5).zero_()
+            if len(gt_boxes_target) != 0:
+                gt_boxes_numpy = torch.FloatTensor(gt_boxes_target)
+                num_boxes_cpu = torch.LongTensor(
+                    [min(gt_boxes_numpy.size(0), cfg.MAX_NUM_GT_BOXES)]
+                )
+                gt_boxes_padding[:num_boxes_cpu, :] = gt_boxes_numpy[:num_boxes_cpu]
+            else:
+                num_boxes_cpu = torch.LongTensor([0])
 
-        #     ######################### da loss 1 #####################################
-        #     # domain label
-        #     domain_s = Variable(torch.zeros(out_d.size(0)).long().cuda())
-        #     # global alignment loss
-        #     dloss_s = 0.5 * FL(out_d, domain_s)
+            gt_boxes_padding = torch.unsqueeze(gt_boxes_padding, 0)
+            gt_boxes.resize_(gt_boxes_padding.size()).copy_(gt_boxes_padding)
+            num_boxes.resize_(num_boxes_cpu.size()).copy_(num_boxes_cpu)
 
+            student_fasterRCNN.zero_grad()
+            rois, cls_prob, bbox_pred, \
+            rpn_loss_cls, rpn_loss_box, \
+            RCNN_loss_cls, RCNN_loss_bbox, \
+            rois_label, out_d_pixel, out_d = student_fasterRCNN(im_data_s, im_info, gt_boxes, num_boxes)
 
-        #     ######################### da loss 3 #####################################
-        #     # local alignment loss
-        #     dloss_s_p = 0.5 * torch.mean(out_d_pixel ** 2)
-
-        #     #put target data into variable
-        #     data_t[0] = data_t[0][0, 0, :, :, :].unsqueeze(0)
-        #     im_data_w.resize_(data_t[0].size()).copy_(data_t[0])
-        #     im_info.resize_(data_t[1].size()).copy_(data_t[1])
-        #     gt_boxes.resize_(1, 1, 5).zero_()
-        #     num_boxes.resize_(1).zero_()
-
-        #     out_d_pixel, out_d = student_fasterRCNN(im_data_w, im_info, gt_boxes, num_boxes, target=True)
-
-
-        #     ######################### da loss 1 #####################################
-        #     # domain label
-        #     domain_t = Variable(torch.ones(out_d.size(0)).long().cuda())
-        #     dloss_t = 0.5 * FL(out_d, domain_t)
-
-
-        #     ######################### da loss 3 #####################################
-        #     # local alignment loss
-        #     dloss_t_p = 0.5 * torch.mean((1 - out_d_pixel) ** 2)
-
-
-        #     if args.dataset == 'cs_car_sim10k_similar':
-        #         loss += (dloss_s + dloss_t + dloss_s_p + dloss_t_p) * args.eta
-        #     else:
-        #         loss += (dloss_s + dloss_t + dloss_s_p + dloss_t_p)
-
-        #     student_optimizer.zero_grad()
-        #     loss.backward()
-        #     student_optimizer.step()
-        #     teacher_fasterRCNN.zero_grad()
-
-        #     if step % 2500 == 0:
-        #         teacher_optimizer.step()
-
-        #     if step % args.disp_interval == 0:
-        #         end = time.time()
-
-        #         loss_temp /= count_step
-        #         loss_rpn_cls_temp /= count_step
-        #         loss_rpn_box_temp /= count_step
-        #         loss_rcnn_cls_temp /= count_step
-        #         loss_rcnn_box_temp /= count_step
+            loss = rpn_loss_cls.mean() + rpn_loss_box.mean() \
+                   + RCNN_loss_cls.mean() + RCNN_loss_bbox.mean()
 
 
-        #         if args.mGPUs:
-        #             loss_rpn_cls = rpn_loss_cls.mean().item()
-        #             loss_rpn_box = rpn_loss_box.mean().item()
-        #             loss_rcnn_cls = RCNN_loss_cls.mean().item()
-        #             loss_rcnn_box = RCNN_loss_bbox.mean().item()
-        #             fg_cnt = torch.sum(rois_label.data.ne(0))
-        #             bg_cnt = rois_label.data.numel() - fg_cnt
-        #         else:
-        #             loss_rpn_cls = rpn_loss_cls.item()
-        #             loss_rpn_box = rpn_loss_box.item()
-        #             loss_rcnn_cls = RCNN_loss_cls.item()
-        #             loss_rcnn_box = RCNN_loss_bbox.item()
-        #             dloss_s = dloss_s.item()
-        #             dloss_t = dloss_t.item()
-        #             dloss_s_p = dloss_s_p.item()
-        #             dloss_t_p = dloss_t_p.item()
-        #             fg_cnt = torch.sum(rois_label.data.ne(0))
-        #             bg_cnt = rois_label.data.numel() - fg_cnt
+            count_step += 1
 
-        #         print("[session %d][epoch %2d][iter %4d/%4d] loss: %.4f, lr: %.2e, step: %3d, count: %3d" \
-        #               % (args.session, epoch, step, iters_per_epoch, loss_temp, lr, count_step, count_iter))
-        #         print("\t\t\tfg/bg=(%d/%d), time cost: %f" % (fg_cnt, bg_cnt, end - start))
-        #         print(
-        #             "\t\t\trpn_cls: %.4f, rpn_box: %.4f, rcnn_cls: %.4f, rcnn_box %.4f dloss s: %.4f dloss t: %.4f dloss_s_p: %.4f dloss_t_p: %.4f eta: %.4f" \
-        #             % (loss_rpn_cls_temp, loss_rpn_box_temp, loss_rcnn_cls_temp, loss_rcnn_box_temp, dloss_s, dloss_t, dloss_s_p, dloss_t_p,
-        #                args.eta))
-        #         if args.use_tfboard:
-        #             info = {
-        #                 'loss': loss_temp,
-        #                 'loss_rpn_cls': loss_rpn_cls_temp,
-        #                 'loss_rpn_box': loss_rpn_box_temp,
-        #                 'loss_rcnn_cls': loss_rcnn_cls_temp,
-        #                 'loss_rcnn_box': loss_rcnn_box_temp
-        #             }
-        #             # logger.add_scalars("logs_s_{}/losses".format(args.session), info,
-        #             #                    (epoch - 1) * iters_per_epoch + step)
-        #             logger.add_scalars(args.log_ckpt_name, info,
-        #                                (epoch - 1) * iters_per_epoch + step)
+            loss_temp += loss.item()
+            loss_rpn_cls_temp += rpn_loss_cls.mean().item()
+            loss_rpn_box_temp += rpn_loss_box.mean().item()
+            loss_rcnn_cls_temp += RCNN_loss_cls.mean().item()
+            loss_rcnn_box_temp += RCNN_loss_bbox.mean().item()
 
-        #         count_step = 0
-        #         loss_temp_last = loss_temp
-        #         loss_temp = 0
-        #         loss_rpn_cls_temp = 0
-        #         loss_rpn_box_temp = 0
-        #         loss_rcnn_cls_temp = 0
-        #         loss_rcnn_box_temp = 0
 
-        #         start = time.time()
+            ######################### da loss 1 #####################################
+            # domain label
+            domain_s = Variable(torch.zeros(out_d.size(0)).long().cuda())
+            # global alignment loss
+            dloss_s = 0.5 * FL(out_d, domain_s)
+
+
+            ######################### da loss 3 #####################################
+            # local alignment loss
+            dloss_s_p = 0.5 * torch.mean(out_d_pixel ** 2)
+
+            #put target data into variable
+            data_t[0] = data_t[0][0, 0, :, :, :].unsqueeze(0)
+            im_data_w.resize_(data_t[0].size()).copy_(data_t[0])
+            im_info.resize_(data_t[1].size()).copy_(data_t[1])
+            gt_boxes.resize_(1, 1, 5).zero_()
+            num_boxes.resize_(1).zero_()
+
+            out_d_pixel, out_d = student_fasterRCNN(im_data_w, im_info, gt_boxes, num_boxes, target=True)
+
+
+            ######################### da loss 1 #####################################
+            # domain label
+            domain_t = Variable(torch.ones(out_d.size(0)).long().cuda())
+            dloss_t = 0.5 * FL(out_d, domain_t)
+
+
+            ######################### da loss 3 #####################################
+            # local alignment loss
+            dloss_t_p = 0.5 * torch.mean((1 - out_d_pixel) ** 2)
+
+
+            if args.dataset == 'cs_car_sim10k_similar':
+                loss += (dloss_s + dloss_t + dloss_s_p + dloss_t_p) * args.eta
+            else:
+                loss += (dloss_s + dloss_t + dloss_s_p + dloss_t_p)
+
+            student_optimizer.zero_grad()
+            loss.backward()
+            student_optimizer.step()
+            teacher_fasterRCNN.zero_grad()
+
+            if step % 2500 == 0:
+                teacher_optimizer.step()
+
+            if step % args.disp_interval == 0:
+                end = time.time()
+
+                loss_temp /= count_step
+                loss_rpn_cls_temp /= count_step
+                loss_rpn_box_temp /= count_step
+                loss_rcnn_cls_temp /= count_step
+                loss_rcnn_box_temp /= count_step
+
+
+                if args.mGPUs:
+                    loss_rpn_cls = rpn_loss_cls.mean().item()
+                    loss_rpn_box = rpn_loss_box.mean().item()
+                    loss_rcnn_cls = RCNN_loss_cls.mean().item()
+                    loss_rcnn_box = RCNN_loss_bbox.mean().item()
+                    fg_cnt = torch.sum(rois_label.data.ne(0))
+                    bg_cnt = rois_label.data.numel() - fg_cnt
+                else:
+                    loss_rpn_cls = rpn_loss_cls.item()
+                    loss_rpn_box = rpn_loss_box.item()
+                    loss_rcnn_cls = RCNN_loss_cls.item()
+                    loss_rcnn_box = RCNN_loss_bbox.item()
+                    dloss_s = dloss_s.item()
+                    dloss_t = dloss_t.item()
+                    dloss_s_p = dloss_s_p.item()
+                    dloss_t_p = dloss_t_p.item()
+                    fg_cnt = torch.sum(rois_label.data.ne(0))
+                    bg_cnt = rois_label.data.numel() - fg_cnt
+
+                print("[session %d][epoch %2d][iter %4d/%4d] loss: %.4f, lr: %.2e, step: %3d, count: %3d" \
+                      % (args.session, epoch, step, iters_per_epoch, loss_temp, lr, count_step, count_iter))
+                print("\t\t\tfg/bg=(%d/%d), time cost: %f" % (fg_cnt, bg_cnt, end - start))
+                print(
+                    "\t\t\trpn_cls: %.4f, rpn_box: %.4f, rcnn_cls: %.4f, rcnn_box %.4f dloss s: %.4f dloss t: %.4f dloss_s_p: %.4f dloss_t_p: %.4f eta: %.4f" \
+                    % (loss_rpn_cls_temp, loss_rpn_box_temp, loss_rcnn_cls_temp, loss_rcnn_box_temp, dloss_s, dloss_t, dloss_s_p, dloss_t_p,
+                       args.eta))
+                if args.use_tfboard:
+                    info = {
+                        'loss': loss_temp,
+                        'loss_rpn_cls': loss_rpn_cls_temp,
+                        'loss_rpn_box': loss_rpn_box_temp,
+                        'loss_rcnn_cls': loss_rcnn_cls_temp,
+                        'loss_rcnn_box': loss_rcnn_box_temp
+                    }
+                    # logger.add_scalars("logs_s_{}/losses".format(args.session), info,
+                    #                    (epoch - 1) * iters_per_epoch + step)
+                    logger.add_scalars(args.log_ckpt_name, info,
+                                       (epoch - 1) * iters_per_epoch + step)
+
+                count_step = 0
+                loss_temp_last = loss_temp
+                loss_temp = 0
+                loss_rpn_cls_temp = 0
+                loss_rpn_box_temp = 0
+                loss_rcnn_cls_temp = 0
+                loss_rcnn_box_temp = 0
+
+                start = time.time()
 
             # if epoch > 6 and step in [2000, 4000, 6000, 8000]:
             #     save_name = os.path.join(output_dir,
@@ -485,7 +485,7 @@ if __name__ == '__main__':
             #         'class_agnostic': args.class_agnostic,
             #     }, save_name)
             #     print('save model: {}'.format(save_name))
-        step=100
+
         student_save_name = os.path.join(output_dir, 'student',
                                          'lg_2500_target_{}_session_{}_epoch_{}_step_{}.pth'.format(
                                              args.dataset_t,
@@ -493,8 +493,8 @@ if __name__ == '__main__':
         save_checkpoint({
             'session': args.session,
             'epoch': epoch + 1,
-            # 'model': student_fasterRCNN.module.state_dict() if args.mGPUs else student_fasterRCNN.state_dict(),
-            # 'optimizer': student_optimizer.state_dict(),
+            'model': student_fasterRCNN.module.state_dict() if args.mGPUs else student_fasterRCNN.state_dict(),
+            'optimizer': student_optimizer.state_dict(),
             'pooling_mode': cfg.POOLING_MODE,
             'class_agnostic': args.class_agnostic,
         }, student_save_name)
@@ -509,7 +509,7 @@ if __name__ == '__main__':
         save_checkpoint({
             'session': args.session,
             'epoch': epoch + 1,
-            # 'model': teacher_fasterRCNN.module.state_dict() if args.mGPUs else teacher_fasterRCNN.state_dict(),
+            'model': teacher_fasterRCNN.module.state_dict() if args.mGPUs else teacher_fasterRCNN.state_dict(),
             'pooling_mode': cfg.POOLING_MODE,
             'class_agnostic': args.class_agnostic,
         }, teacher_save_name)
