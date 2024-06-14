@@ -28,7 +28,7 @@ from model.rpn.bbox_transform import bbox_transform_inv
 from model.rpn.bbox_transform import clip_boxes
 from model.roi_layers import nms
 from model.utils.parser_func import parse_args, set_dataset_args
-from model.utils.source_similar_pesudo_label import obtain_label
+# from model.utils.source_similar_pesudo_label import obtain_label
 import matplotlib
 import matplotlib.pyplot as plt
 import pdb
