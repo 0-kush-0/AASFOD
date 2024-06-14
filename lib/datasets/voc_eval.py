@@ -101,7 +101,7 @@ def voc_eval(detpath,
         os.mkdir(cachedir)
         print('loop', cachedir)
     cachefile = os.path.join(cachedir, '%s_annots.pkl' % imagesetfile)
-    print('HIIIII voc eval afterrr', cachedir)
+    print('HIIIII voc eval afterrr', cachefile)
     # read list of images
     with open(imagesetfile, 'r') as f:
         lines = f.readlines()
