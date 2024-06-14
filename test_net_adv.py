@@ -11,6 +11,8 @@ import time
 import _init_paths
 import cv2
 import torch
+# import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
 
 from torch.autograd import Variable
 import pickle
@@ -233,7 +235,7 @@ if __name__ == '__main__':
       if vis:
 
           img_name = imdb._load_image_set_index()[i]
-          vis_img_path = "your_own_path/{}.jpg".format(img_name)
+          vis_img_path = "/kaggle/working/tests/{}.jpg".format(img_name)
           cv2.imwrite(vis_img_path, im2show)
           # pdb.set_trace()
           # cv2.imshow('test', im2show)
