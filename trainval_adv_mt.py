@@ -485,7 +485,7 @@ if __name__ == '__main__':
             #         'class_agnostic': args.class_agnostic,
             #     }, save_name)
             #     print('save model: {}'.format(save_name))
-
+        step=100
         student_save_name = os.path.join(output_dir, 'student',
                                          'lg_2500_target_{}_session_{}_epoch_{}_step_{}.pth'.format(
                                              args.dataset_t,
