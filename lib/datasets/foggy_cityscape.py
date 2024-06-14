@@ -297,7 +297,7 @@ class foggy_cityscape(imdb):
             'ImageSets',
             'Main',
             self._image_set + '.txt')
-        cachedir = os.path.join(self._devkit_path, 'annotations_cache')
+        cachedir = os.path.join(args.save_dir, 'annotations_cache')
         aps = []
         recs = []
         precs = []
