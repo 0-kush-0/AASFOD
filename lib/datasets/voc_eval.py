@@ -96,9 +96,12 @@ def voc_eval(detpath,
     # cachedir caches the annotations in a pickle file
 
     # first load gt
+    print('HIIIII voc eval befote', cachedir)
     if not os.path.isdir(cachedir):
         os.mkdir(cachedir)
+        print('loop', cachedir)
     cachefile = os.path.join(cachedir, '%s_annots.pkl' % imagesetfile)
+    print('HIIIII voc eval afterrr', cachedir)
     # read list of images
     with open(imagesetfile, 'r') as f:
         lines = f.readlines()
