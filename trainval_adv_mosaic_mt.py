@@ -15,6 +15,8 @@ import torch
 from torch.autograd import Variable
 import torch.nn as nn
 import torch.nn.functional as F
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
 
 from roi_data_layer.roidb import combined_roidb
 from roi_data_layer.roibatchLoader import roibatchLoader
@@ -71,7 +73,7 @@ if __name__ == '__main__':
     print('{:d} source roidb entries'.format(len(roidb)))
     print('{:d} target roidb entries'.format(len(roidb_t)))
 
-    output_dir = args.save_dir + "/" + args.net + "/" + args.log_ckpt_name
+    output_dir = args.save_dir
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
