@@ -87,7 +87,7 @@ def parse_args():
                         default=100, type=int)
     parser.add_argument('--checkpoint_interval', dest='checkpoint_interval',
                         help='number of iterations to display',
-                        default=10000, type=int)
+                        default=5000, type=int)
 
     parser.add_argument('--save_dir', dest='save_dir',
                         help='directory to save models', default="models",
