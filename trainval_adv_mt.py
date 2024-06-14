@@ -73,7 +73,7 @@ if __name__ == '__main__':
     print('{:d} source roidb entries'.format(len(roidb)))
     print('{:d} target roidb entries'.format(len(roidb_t)))
 
-    output_dir = args.save_dir + "/" + args.net + "/" + args.log_ckpt_name
+    output_dir = args.save_dir
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
