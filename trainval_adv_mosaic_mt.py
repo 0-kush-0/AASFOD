@@ -196,7 +196,7 @@ if __name__ == '__main__':
         student_fasterRCNN = nn.DataParallel(student_fasterRCNN)
         teacher_fasterRCNN = nn.DataParallel(teacher_fasterRCNN)
 
-    iters_per_epoch = int(10000 / args.batch_size)
+    iters_per_epoch = int(2000 / args.batch_size)
 
     if args.ef:
         FL = EFocalLoss(class_num=2, gamma=args.gamma)
