@@ -42,7 +42,7 @@ weight_decay = cfg.TRAIN.WEIGHT_DECAY
 
 if __name__ == '__main__':
 
-  vis = 0
+  vis = 1
   args = parse_args()
 
   print('Called with args:')
